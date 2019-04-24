@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestProgram xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="TestProgram.xsd">
+    <General>
+        <Dutboard>crossconnect/common/BasicLab.dbd</Dutboard>
+        <GlobalConfiguration></GlobalConfiguration>
+        <GlobalSpecification></GlobalSpecification>
+    </General>
+    <ExecutionDefinition>
+        <DisabledSites>
+        </DisabledSites>
+    </ExecutionDefinition>
+    <Paths>
+    </Paths>
+</TestProgram>

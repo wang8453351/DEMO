@@ -1,0 +1,20 @@
+testprogram BasicLab {
+    dutboard = crossconnect.common.BasicLab;
+//    ignoredsites = 1-4;
+    //
+    // Lab Instruction: Change the main flow to "LabMain.flow"
+    //
+    testflow Main {
+        flow = crossconnect.common.LabMain;
+    }
+
+    testflow PreBind {
+       flow = crossconnect.common.ReadTestTable;
+    }
+
+    //
+    // Lab Instruction: Ignore site 5
+    //
+//     ignoredsites = 5;
+
+}

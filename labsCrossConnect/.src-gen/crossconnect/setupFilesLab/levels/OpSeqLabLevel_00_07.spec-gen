@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpecSheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="SpecSheet.xsd" origin="//@spec">
+ <Import value="crossconnect/common/SignalGroups.spec-gen" origin="//@importSection/@importDeclarations.0" />
+ <Import value="crossconnect/common/SpecVariables.spec-gen" origin="//@importSection/@importDeclarations.1" />
+ <Instrument id="D00,D01,D02,D03,D04,D05,D06,D07,R00,R01,R02,R03,R04,R05,R06,R07" origin="//@spec/@setups.0">
+ </Instrument>
+</SpecSheet>

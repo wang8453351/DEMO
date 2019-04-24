@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<example list="no">
+  <title>The common subfolder</title>
+  <shortdesc> The "common" folder can be used to group the test setup
+    file that
+    are common to multiple tests.
+  </shortdesc>
+  <body>
+    <p>
+      Groups the test setup files that are used among multiple test
+      categories. The DUT board and the testflow files should always be
+      kept in the "common" folder.
+    </p>
+    <p>See also:</p>
+    <ul>
+      <li>
+        <a title="Recommended SmarTest project structure" href="244315.htm">
+          Recommended SmarTest project structure
+        </a>
+      </li>
+    </ul>
+  </body>
+</example>

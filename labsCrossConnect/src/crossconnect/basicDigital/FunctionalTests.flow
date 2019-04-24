@@ -1,0 +1,57 @@
+/**
+ * Test flow running basic digital tests.
+ *
+ * @see "Testflow file reference in TDC (Topic 244398)"
+ */
+flow FunctionalTests {
+
+    /** enable 'releaseTester' for background processing */
+    in backgroundProcessing = true;
+
+    setup {
+
+        /** Digital functional pattern with a test method with (parameters for) datalogging */
+        suite Functional calls com.advantest.itee.tml.actml.FunctionalTest {
+            measurement.specification = setupRef(crossconnect.basicDigital.mainSpecs.Functional);
+            measurement.pattern = setupRef(crossconnect.basicDigital.patterns.Functional);
+            signals = "allOutputs";
+        }
+
+        /** Digital functional pattern in x3 mode */
+        suite Functionalx3 calls com.advantest.itee.tml.actml.FunctionalTest {
+            measurement.specification = setupRef(crossconnect.basicDigital.mainSpecs.Functionalx3);
+            measurement.pattern = setupRef(crossconnect.basicDigital.patterns.Functionalx3);
+            signals = "allOutputs";
+        }
+
+        /** Large digital functional pattern */
+        suite LargeFunctional calls com.advantest.itee.tml.actml.FunctionalTest  {
+            measurement.specification = setupRef(crossconnect.basicDigital.mainSpecs.FunctionalSlow);
+            measurement.pattern = setupRef(crossconnect.basicDigital.patterns.FunctionalLarge);
+            signals = "allOutputs";
+        }
+
+        /** Digital capture of a block of 16 signals and 8 vectors */
+        suite DigitalCaptureRxx calls testMethods.acLib.DigitalCaptureTest {
+            measurement.specification = setupRef(crossconnect.basicDigital.mainSpecs.DigitalCapture);
+            measurement.pattern = setupRef(crossconnect.basicDigital.patterns.DigitalCaptureBlock16x8);
+       }
+
+        /** Digital capture of a block of 16 signals and 20480 vectors + release tester */
+        suite DigitalCaptureRxxLong calls testMethods.acLib.DigitalCaptureTest {
+            measurement.specification = setupRef(crossconnect.basicDigital.mainSpecs.DigitalCapture);
+            measurement.pattern = setupRef(crossconnect.basicDigital.patterns.DigitalCaptureBlock16x20k);
+            enableReleaseTester = backgroundProcessing;
+        }
+    }
+
+    execute {
+        Functional.execute();
+        Functionalx3.execute();
+        Functionalx3.bypass;
+        DigitalCaptureRxx.execute();
+        DigitalCaptureRxxLong.execute();
+        LargeFunctional.execute();
+//        addBin(1);
+    }
+}

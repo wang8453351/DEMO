@@ -1,0 +1,13 @@
+sequence DcViLab {
+
+    sequential seqGrp1 {
+        // Add action and pattern calls here
+        patternCall crossconnect.dcLab.patterns.DcViLab01;
+        actionCall dcVIIfVm1;
+        patternCall crossconnect.dcLab.patterns.DcViLab02;
+        actionCall dcVIIfVm2;
+        patternCall crossconnect.dcLab.patterns.DcViLab03;
+        actionCall dcVIIfVm3;
+    }
+
+}

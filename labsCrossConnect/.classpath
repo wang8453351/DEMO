@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="DTE_CONTAINER/8.1.3"/>
+	<classpathentry kind="src" path=".src-gen-flow"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="JavaWeb"/>
+	<classpathentry kind="src" path="JAVA_LAB"/>
+	<classpathentry kind="src" path="Java_Advanced"/>
+	<classpathentry kind="src" path="RunoobPattern"/>
+	<classpathentry kind="src" path="calGUI"/>
+	<classpathentry kind="lib" path="/home/demo/Project/TomCat/apache-tomcat-9.0.10/lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="/home/demo/Project/TomCat/apache-tomcat-9.0.10/lib/servlet-api.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

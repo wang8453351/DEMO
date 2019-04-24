@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<example list="yes" testDomain="digital">
+  <title>Digital functional tests</title>
+  <shortdesc>In this code example, various digital functional tests are
+    performed. In which, digital patterns are applied and digital capture
+    is
+    used to obtain the results.
+  </shortdesc>
+  <body>
+    <p></p>
+    <p>List of tests:</p>
+    <ul>
+      <li>Digital functional test using a pattern executed with a simple
+        test method
+      </li>
+      <li>Digital functional test using a pattern executed with a test
+        method containing parameters for datalogging
+      </li>
+      <li> Digital functional test using a pattern in X3 mode</li>
+      <li> Digital capture for a block of 16 signals and 8 vectors</li>
+      <li> Digital capture for a block of 16 signals and 20480 vectors in
+        addition to "release tester"
+      </li>
+      <li> Digital functional test using a large pattern </li>
+    </ul>
+
+    <p>See also:</p>
+    <ul>
+      <li>
+        <a title="Pattern file reference" href="244365.htm">Pattern file
+          reference
+        </a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a title="Test method" href="244088.htm">Test methods
+        </a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a title="X-modes" href="250880.htm">X-modes
+        </a>
+      </li>
+    </ul>
+  </body>
+</example>

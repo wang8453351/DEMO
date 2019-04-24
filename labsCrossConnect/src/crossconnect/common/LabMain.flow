@@ -1,0 +1,37 @@
+flow LabMain {
+
+    setup {
+//        flow BasicDigitalFlow calls crossconnect.basicDigital.FunctionalTests {
+//        }
+//        flow NewSubFlow calls crossconnect.setupFilesLab.SetupFilesLab{
+//
+//        }
+//        flow NewDcFlow calls crossconnect.dcLab.DcLab{
+//
+//        }
+        suite ReadAutoCalLoss calls mainTestMethod.ReadAutoCalLoss{}
+        suite CALGUI      calls flowLayout.BoardLayoutDemo{}
+        //
+        // Lab instruction: add subflow NewSubFlow calling SetupFilesLab
+        //
+
+        //
+        // Lab instruction: add subflow NewDcFlow calling DcLab
+        //
+
+    }
+
+    execute {
+//        BasicDigitalFlow.execute;
+//
+//        NewSubFlow.execute;
+//        NewDcFlow.execute;
+        ReadAutoCalLoss.execute;
+        CALGUI.execute;
+        //
+        // Lab instruction: add execution of additional subflows NewSubFlow NewDcFlow
+        //
+
+        addBin(1);
+    }
+}

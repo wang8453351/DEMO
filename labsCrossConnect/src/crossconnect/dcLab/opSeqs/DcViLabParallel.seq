@@ -1,0 +1,30 @@
+sequence DcViLabParallel {
+
+    parallel parGrp1 {
+        sequential seqGrp1 {
+            // Add action calls here
+            actionCall dcVIIfVm1;
+            wait 850us;
+            actionCall dcVIIfVm2;
+            wait 850us;
+            actionCall dcVIIfVm3;
+
+        }
+        sequential seqGrp2 {
+            // Add action calls here
+            actionCall dcVIVfIm1;
+            actionCall dcVIVfIm2;
+            actionCall dcVIVfIm3;
+
+        }
+        sequential seqGrp3 {
+            // Add pattern calls here
+            patternCall crossconnect.dcLab.patterns.DcViLab01;
+            patternCall crossconnect.dcLab.patterns.DcViLab02;
+            patternCall crossconnect.dcLab.patterns.DcViLab03;
+
+
+        }
+    }
+
+}

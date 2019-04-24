@@ -1,0 +1,56 @@
+sequence DcViLabComplex {
+
+    sequential seqGrp1{
+        parallel parGrp1 {
+            sequential seqGrp11 {
+                // Add action call here
+                actionCall dcVIIfVm1;
+
+            }
+            sequential seqGrp12 {
+                // Add action call here
+                actionCall dcVIVfIm1;
+
+            }
+            sequential seqGrp13 {
+                // Add pattern call here
+                patternCall crossconnect.dcLab.patterns.DcViLab01;
+
+            }
+        }
+        parallel parGrp2 {
+            sequential seqGrp21 {
+                // Add action call here
+                actionCall dcVIVfIm2;
+
+            }
+            sequential seqGrp22 {
+                // Add action call here
+                actionCall dcVIIfVm2;
+
+            }
+            sequential seqGrp23 {
+                // Add pattern call here
+                     patternCall crossconnect.dcLab.patterns.DcViLab02;
+
+            }
+        }
+        parallel parGrp3 {
+            sequential seqGrp31 {
+                // Add action call here
+                actionCall dcVIVfIm2;
+
+            }
+            sequential seqGrp32 {
+                // Add action call here
+                actionCall dcVIIfVm2;
+            }
+            sequential seqGrp33 {
+                // Add pattern call here
+                 patternCall crossconnect.dcLab.patterns.DcViLab03;
+
+            }
+        }
+    }
+
+}

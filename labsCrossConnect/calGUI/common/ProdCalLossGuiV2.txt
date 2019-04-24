@@ -1,0 +1,370 @@
+/*******************************************************************************
+ * Copyright (c) 2018 Advantest. All rights reserved.
+ *
+ * Contributors:
+ *     Advantest - initial API and implementation
+ *******************************************************************************/
+package common;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+
+import org.jopendocument.dom.spreadsheet.MutableCell;
+import org.jopendocument.dom.spreadsheet.Sheet;
+import org.jopendocument.dom.spreadsheet.SpreadSheet;
+
+import RFCBB_tml.COM.RF_UserCommon;
+import xoc.dta.TestMethod;
+import xoc.dta.annotations.In;
+import xoc.dta.testdescriptor.IParametricTestDescriptor;
+
+/**
+ * <p>TODO: Get rid of MultisiteDouble Parameter, just get judge result from tml</p>
+ * So we don't need to use evaluate or PTD to get boolean result.
+ * <p>Step1: Read Cal_prod.ods , Return Map(List(String),List(String)); <br>
+ * Step2: Foreach Cal_Prod Map, Do judgement for InLoss,OutLoss,OutLossL; Save Failed site Information;<br>
+ * Step3: Boolean TotalRslt = InLossRslt&&OutLoss&&OutLossL ( 8sites = configuredSites)<br>
+ * Step4: Use TotalRslt as GUI Tool Input Parameter, then show each site P/F result</p>
+ * wangping @20180529
+ *
+ */
+public class ProdCalLossGuiV2 extends TestMethod {
+
+
+    @In public Integer maxCount = 100;
+    @In public String prodCalDataFilePath = "calibration/Hi6H03V100_CAL_prod.ods";
+    @In public String sheetName = "cal_InLoss;cal_OutLoss;cal_OutLossL";
+
+
+    private static Integer FLOW_COUNT = 0;
+
+    public IParametricTestDescriptor ptdInLoss;
+    public IParametricTestDescriptor ptdOutLoss;
+    public IParametricTestDescriptor ptdOutLossL;
+//    public static
+
+    @Override
+    public void execute() {
+        // TODO Auto-generated method stub
+        int configuredSites = context.getNumberOfConfiguredSites();
+
+        @SuppressWarnings("static-access")
+        String progPath = context.workspace().getActiveProjectPath()+"/";
+        String filePath = progPath+prodCalDataFilePath;
+        final Integer LBID = RF_UserCommon.getDUT_ID();
+//        println("Read LBID from EEPROM is "+LBID);
+        if(FLOW_COUNT<maxCount-1) {
+            FLOW_COUNT++;
+        }
+        else {
+            FLOW_COUNT = 0;
+
+            String showDetailFailInfo = "Fail Information: \n";
+            String showDetailMapValue = new String("");
+            String showDetailInLossValue = new String("");
+            String showDetailOutLossValue = new String("");
+            String showDetailOutLossLValue = new String("");
+            List<Boolean[]> guiJudge = new ArrayList<>();
+            Boolean[] isInLossCalOk = new Boolean[configuredSites];
+            Boolean[] isOutLossCalOk =  new Boolean[configuredSites];
+            Boolean[] isOutLossLCalOk = new Boolean[configuredSites];
+            boolean isMatchLBID = false;
+            for(int size=0;size<configuredSites;size++) {
+                isInLossCalOk[size] = true;
+                isOutLossCalOk[size] = true;
+                isOutLossLCalOk[size] = true;
+            }
+
+            Map<List<String>,List<Double>> prodOdsDataMap = readProdOdsFile(filePath,new ArrayList<String>(Arrays.asList(sheetName.split("\\s*;\\s*"))),configuredSites);
+//          TODO: Debug Get prodOdsDataMap size
+//          println("The Size of prodOdsDataMap is "+prodOdsDataMap.size());//Check OK by wangping @20180531
+
+            for(List<String> keyOfprodOdsDataMap : prodOdsDataMap.keySet()) {
+                String shtName = keyOfprodOdsDataMap.get(0);
+                String lBId = keyOfprodOdsDataMap.get(1);
+                String testItem = keyOfprodOdsDataMap.get(2);
+                List<Double> valueOfprodOdsDataMap = prodOdsDataMap.get(keyOfprodOdsDataMap);
+                if(lBId.equals(LBID.toString())) {
+                   isMatchLBID = true;
+                }
+
+                int a = 0;//show once for failedTextInLoss;
+                int b = 0;//show once for failedTextOutLoss;
+                int c = 0;//show once for failedTextOutLossL;
+                Boolean[] isInLossCalOkTemp = new Boolean[configuredSites];
+                Boolean[] isOutLossCalOkTemp = new Boolean[configuredSites];
+                Boolean[] isOutLossLCalOkTemp = new Boolean[configuredSites];
+                for(int i =0;i<configuredSites;i++) {
+
+                    isInLossCalOkTemp[i]=true;
+                    isOutLossCalOkTemp[i]=true;
+                    isOutLossLCalOkTemp[i]=true;
+
+                    if(lBId.equals(LBID.toString())){
+                        int site = i+1;
+                        if(shtName.equals("cal_InLoss")) {
+                            Double lowLimitFirst = ptdInLoss.getLowLimit();
+                            Double highLimitFirst = ptdInLoss.getHighLimit();
+                            if(valueOfprodOdsDataMap.get(i)<lowLimitFirst||valueOfprodOdsDataMap.get(i)>highLimitFirst||valueOfprodOdsDataMap.get(i)==0) {
+                                a++;
+                                isInLossCalOkTemp[i]=false;
+                                if(a==1) {
+                                    String failedTextInLoss = "InputLoss: "+ testItem +" are FAILED!\n";
+                                    a++;
+                                    showDetailInLossValue = showDetailInLossValue+failedTextInLoss;
+
+                                }
+                                String failedSiteInLoss = "Site "+site+"==>"+valueOfprodOdsDataMap.get(i)+"****limit("+lowLimitFirst+","+highLimitFirst+")****"+"\n";
+                                showDetailInLossValue = showDetailInLossValue+failedSiteInLoss;
+                            }
+
+                            isInLossCalOk[i] = isInLossCalOk[i]&&isInLossCalOkTemp[i];
+                        }
+                        else if(shtName.equals("cal_OutLoss")) {
+                            Double lowLimitSecond = ptdOutLoss.getLowLimit();
+                            Double highLimitSecond = ptdOutLoss.getHighLimit();
+                            if(valueOfprodOdsDataMap.get(i)<lowLimitSecond||valueOfprodOdsDataMap.get(i)>highLimitSecond||valueOfprodOdsDataMap.get(i)==0) {
+                                b++;
+                                isOutLossCalOkTemp[i]=false;
+                                if(b==1) {
+                                    String failedTextOutLoss = "OutputLoss: "+ testItem +" are FAILED!\n";
+                                    showDetailOutLossValue = showDetailOutLossValue+failedTextOutLoss;
+
+                                }
+                                String failedSiteOutLoss = "Site "+site+"==>"+valueOfprodOdsDataMap.get(i)+"****limit("+lowLimitSecond+","+highLimitSecond+")****"+"\n";
+                                showDetailOutLossValue = showDetailOutLossValue+failedSiteOutLoss;
+                            }
+                            isOutLossCalOk[i] = isOutLossCalOk[i]&&isOutLossCalOkTemp[i];
+                        }
+                        else if(shtName.equals("cal_OutLossL")) {//need use equals , cal_OutLoss contains cal_OutLossL
+                            Double lowLimitLast = ptdOutLossL.getLowLimit();
+                            Double highLimitLast = ptdOutLossL.getHighLimit();
+                            if(valueOfprodOdsDataMap.get(i)<lowLimitLast||valueOfprodOdsDataMap.get(i)>highLimitLast||valueOfprodOdsDataMap.get(i)==0) {
+                                c++;
+                                isOutLossLCalOkTemp[i]=false;
+                                if(c==1) {
+                                    String failedTextOutLossL = "OutputLossL: "+ testItem +" are FAILED!\n";
+                                    showDetailOutLossLValue = showDetailOutLossLValue+failedTextOutLossL;
+
+                                }
+                                String failedSiteOutLossL = "Site "+site+"==>"+valueOfprodOdsDataMap.get(i)+"****limit("+lowLimitLast+","+highLimitLast+")****"+"\n";
+                                showDetailOutLossLValue = showDetailOutLossLValue+failedSiteOutLossL;
+                            }
+                            isOutLossLCalOk[i] = isOutLossLCalOk[i]&&isOutLossLCalOkTemp[i];
+                        }
+                    }
+                    else if (lBId.isEmpty()) {
+                        println(""); // Do nothing, if LBID in the sheet is empty, we filter it and do none action.
+                    }
+//                    else {
+//                        println("Checking : LBID in file is "+lBId+", "+"Read LBID from EEPROM is "+LBID+"..........");//if so many LBID stored in one sheet, should sorted it
+//                    }
+
+                }//Foreach Site end
+
+
+            }//Foreach ProdOdsMap end
+
+
+            showDetailMapValue = showDetailInLossValue+showDetailOutLossValue+showDetailOutLossLValue;
+            showDetailFailInfo = showDetailFailInfo+showDetailMapValue;
+
+            guiJudge.add(0,isInLossCalOk);
+            guiJudge.add(1,isOutLossCalOk);
+            guiJudge.add(2,isOutLossLCalOk);
+
+            Boolean[] TotalLoss = new Boolean[configuredSites];
+            if(!isMatchLBID) {
+                println("ERROR: LBID in file"+", "+"Read LBID from EEPROM is "+LBID+"..........");
+                showDetailFailInfo = showDetailFailInfo+" LBID is not matching......";
+                for(int i =0;i<configuredSites;i++) {
+                    TotalLoss[i]=false;
+                }
+
+            }else {
+
+                for(int sites=0;sites<configuredSites;sites++) {
+                    TotalLoss[sites] = guiJudge.get(0)[sites]&&(guiJudge.get(1)[sites])&&(guiJudge.get(2)[sites]);
+               }
+            }
+
+
+
+
+            createJFrame("ADVANTEST", TotalLoss,progPath, configuredSites,showDetailFailInfo);
+
+        }
+
+
+
+    }
+
+    /**
+     * TODO: Read Prod ODS file from program, return List(Element ----> Site - value Map)
+     *
+     */
+    private Map<List<String>,List<Double>> readProdOdsFile(String fileName,ArrayList<String> rdShtNameAry,int configuredSite){
+        Map<List<String>,List<Double>> mProdCalOdsMap = new LinkedHashMap<>();
+
+        File file = new File(fileName);
+        if(!file.exists()) {
+            println("Error! Exception in reading from prod_ods file: "+fileName);
+        }
+        SpreadSheet document = null;
+        try {
+            document = SpreadSheet.createFromFile(file);
+        }catch (IOException e) {
+            println("Error! Exception in reading from file: "+fileName);
+            e.printStackTrace();
+        }
+        if(document == null) {
+          return mProdCalOdsMap;
+        }
+        int count = document.getSheetCount();
+        for(int shtID = 0;shtID<count;shtID++) {
+            Sheet sheet = document.getSheet(shtID);
+            String shtName = sheet.getName();
+            if(rdShtNameAry.contains(shtName)) {
+                mProdCalOdsMap = readCalSheet(mProdCalOdsMap,sheet,configuredSite);
+            }
+        }
+        return mProdCalOdsMap;
+    }
+
+    /**
+     * TODO: Read Per sheet content in ODS file, return List(Element ----> Site - value Map)
+     *
+     */
+    private Map<List<String>,List<Double>> readCalSheet(Map<List<String>,List<Double>> prodLossMap,Sheet sheet,int sites){
+        String shtName = sheet.getName();
+
+        int colCount = sheet.getColumnCount();
+        int rowCount = sheet.getRowCount();
+
+
+//        int maxRowCount=52;
+        int maxRowCount = sheet.getCurrentRegion(0, 0).getEndPoint().y+1;
+        int maxColCount=15;
+        if(rowCount >maxRowCount){
+            sheet.setRowCount(maxRowCount);
+            rowCount = maxRowCount;
+        }
+
+        if (colCount >maxColCount){
+            sheet.setColumnCount(maxColCount);
+            colCount = maxColCount;
+        }
+        for(int row = 1;row<rowCount;row++){
+            List<String> keyOfMap = new ArrayList<>();
+            List<Double> valueOfMap = new ArrayList<>();
+            ArrayList<String> valuePerRow = new ArrayList<>();
+            for(int col=0;col<colCount;col++) {
+                MutableCell<SpreadSheet> cell = sheet.getCellAt(col,row);
+                String cellValue = cell.getValue().toString();
+                valuePerRow.add(col,cellValue);
+            }
+            if(valuePerRow.get(0).equals("")){
+                continue;
+            }
+            if(shtName.contains("cal_")) {
+                keyOfMap.add(0, shtName);//shtName
+                keyOfMap.add(1,valuePerRow.get(0));//LBID
+                keyOfMap.add(2,valuePerRow.get(1));//InLoss->testItem OutLoss->testItem, ignore Freq.
+                if(shtName.contains("InLoss")) {
+                    for(int site=0;site<sites;site++) {
+                        valueOfMap.add(site,Double.parseDouble(valuePerRow.get(2+site)));//Site1:index2,Site2:index3....
+                    }
+                }
+                else {
+                    for(int site=0;site<sites;site++) {
+                        valueOfMap.add(site,Double.parseDouble(valuePerRow.get(3+site)));//Site1:index3,Site2:index4....
+                    }
+                }
+
+            }
+            prodLossMap.put(keyOfMap,valueOfMap);//KeyOfList:{shtName,LBID,TestItem};ValueOfList:{Site1,site2,...site8};
+
+        }
+        return prodLossMap;
+
+    }
+
+
+    /**
+     * TODO: Create GUI TOOL with Java Swing
+     * a. show cal pass/fail for each site
+     * b. show failed information
+     *
+     *
+     */
+    @SuppressWarnings("static-access")
+    private void createJFrame(String theme,Boolean[] rslt,String FilePath,int configuredSites,String textinfo) {
+        JFrame jf = new JFrame(theme);
+        JTabbedPane jtp = new JTabbedPane();
+        JPanel jp1 = new JPanel();
+
+        JButton jb;
+        JLabel jl;
+        JScrollPane jsp;
+        JTextArea jta = new JTextArea(textinfo);
+
+        ImageIcon icon1 = new ImageIcon(FilePath+"images/PASS_JPG.jpg");
+        ImageIcon icon2 = new ImageIcon(FilePath+"images/FAIL_JPG.jpg");
+        icon1 = new ImageIcon(icon1.getImage().getScaledInstance(200, 100, Image.SCALE_DEFAULT));
+        icon2 = new ImageIcon(icon2.getImage().getScaledInstance(200, 100, Image.SCALE_DEFAULT));
+        jp1.setLayout(new GridLayout(configuredSites,2));
+
+        for(int site=1;site<configuredSites+1;site++) {
+
+            jl = new JLabel("SITE "+site+": ",JLabel.CENTER);
+            jl.setFont(new Font("Dialog",1,45));//set Font of JLabel;
+            jp1.add(jl);
+
+            if(rslt[site-1]) {
+                jb = new JButton(icon1);
+                jb.setBackground(Color.GREEN);
+            }
+            else {
+                jb = new JButton(icon2);
+                jb.setBackground(Color.RED);
+            }
+
+            jp1.add(jb);
+
+        }
+        jsp = new JScrollPane(jta);
+        jtp.add("TOTAL",jp1);
+        jtp.add("FailInfo",jsp);
+        jf.add(jtp,BorderLayout.CENTER);
+
+        jf.setIconImage(new ImageIcon(FilePath+"images/Icon_JPG.jpg").getImage());
+        jf.setSize(600,800);
+        jf.setLocation(300,280);
+        jf.setResizable(false);
+
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setVisible(true);
+
+    }
+
+
+}

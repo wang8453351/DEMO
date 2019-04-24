@@ -1,0 +1,23 @@
+flow DcLab {
+
+    setup {
+        suite DcInPattern calls testMethods.dcLib.DCLab {
+            measurement.specification = setupRef(crossconnect.dcLab.DigInOutDC);
+            measurement.pattern = setupRef(crossconnect.dcLab.patterns.DcTrigger);
+        }
+        suite DcViLab calls testMethods.dcLib.Exec3VoltageMeasDcVi {
+            measurement.specification = setupRef(crossconnect.dcLab.DcViLab);
+            measurement.operatingSequence = setupRef(crossconnect.dcLab.opSeqs.DcViLabComplex);
+
+            // Parameters passed to method
+            signalsMeas = "R00 + R02 + R03";
+        }
+    }
+
+    execute {
+        DcInPattern.execute();
+//        DcInPattern.bypass;
+        DcViLab.execute();
+        message(30, "Test flow execution done.")
+    }
+}

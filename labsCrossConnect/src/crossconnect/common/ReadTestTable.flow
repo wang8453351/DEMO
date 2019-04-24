@@ -1,0 +1,29 @@
+/**
+ * This PreBind testflow is executed before the test program is bound.
+ * It is used, for example, to load a test table from disk.
+ *
+ * @see "Auxiliary testflows in TDC (Topic 251709)"
+ */
+flow ReadTestTable {
+
+    setup {
+       suite importTestTable calls com.advantest.itee.testtable.testmethod.TestTableReader  {
+          testTablePath = "crossconnect/common/BasicLabTestTable.ods";
+          limitCategory = "QA";
+          logLevelCategory = "QA";
+          errorLogPath = "/tmp";
+          forceImport = true;
+       }
+       suite exportTestTable calls com.advantest.itee.testtable.testmethod.TestTableWriter {
+          limitCategory = "QA";
+          logLevelCategory = "QA";
+          outputFileName = "/tmp/BasicLabExportTestTable.ods";
+       }
+    }
+
+    execute {
+        importTestTable.execute();
+        exportTestTable.execute();
+    }
+}
+

@@ -1,0 +1,51 @@
+flow SetupFilesLab {
+
+    // test flow output parameters, types are auto-recognized
+    out failingTests = 0;
+
+    setup {
+
+        suite ExampleTest calls testMethods.acLib.FunctionalTest {
+            measurement.specification = setupRef(crossconnect.setupFilesLab.mainSpecs.ExampleTest);
+            measurement.pattern = setupRef(crossconnect.setupFilesLab.patterns.Counting_00_15x1);
+        }
+
+        suite OpSeqLab calls testMethods.acLib.FunctionalTest {
+            measurement.specification = setupRef(crossconnect.setupFilesLab.mainSpecs.OpSeqLab);
+            measurement.operatingSequence = setupRef(crossconnect.setupFilesLab.OpSeqLab);
+            testSignals = "gR00_R07";
+            }
+        suite SpecFileLab calls testMethods.acLib.FunctionalTest{
+            measurement.specification = setupRef(crossconnect.setupFilesLab.mainSpecs.SpecFileLab);
+            measurement.operatingSequence = setupRef(crossconnect.setupFilesLab.SpecFileLab);
+        }
+        suite SpecFileMaxVcc calls testMethods.acLib.FunctionalTest{
+            measurement.specification = setupRef(crossconnect.setupFilesLab.mainSpecs.SpecFileMaxVcc);
+            measurement.pattern = setupRef(crossconnect.setupFilesLab.patterns.Counting_00_15x1);
+        }
+        //
+        // Lab instruction: add more test suites: OpSeqLab, SpecFileLab and SpecFileMaxVcc
+        //
+
+    }
+
+    execute {
+
+        ExampleTest.execute;
+        OpSeqLab.execute;
+        SpecFileLab.execute;
+        SpecFileMaxVcc.execute;
+        if(!ExampleTest.pass) {failingTests=failingTests+1;}
+
+        //
+        // Lab instruction: add execution of additional test suites OpSeqLab, SpecFileLab and SpecFileMaxVcc
+        //
+
+        if (failingTests == 0) {
+            addBin(1);
+        }
+        else {
+            addBin(41);
+        }
+    }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpecSheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="SpecSheet.xsd" origin="//@spec">
+ <Import value="crossconnect/basicDigital/levels/FunctionalLevel.spec-gen" origin="//@importSection/@importDeclarations.0" />
+ <Import value="crossconnect/basicDigital/timings/FunctionalTimingEqn.spec-gen" origin="//@importSection/@importDeclarations.1" />
+ <Import value="crossconnect/basicDigital/timings/DigitalCaptureTimingWtb.spec-gen" origin="//@importSection/@importDeclarations.2" />
+ <Instrument id="D00,D01,D02,D03,D04,D05,D06,D07,D08,D09,D10,D11,D12,D13,D14,D15" origin="//@spec/@setups.0">
+ </Instrument>
+ <Instrument id="R00,R01,R02,R03,R04,R05,R06,R07,R08,R09,R10,R11,R12,R13,R14,R15" origin="//@spec/@setups.1">
+ </Instrument>
+</SpecSheet>

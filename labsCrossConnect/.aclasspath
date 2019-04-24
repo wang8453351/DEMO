@@ -1,0 +1,6 @@
+labsCrossConnect/.abin
+labsCrossConnect/bin
+# from labsCrossConnect
+/home/demo/Project/TomCat/apache-tomcat-9.0.10/lib/jsp-api.jar
+# from labsCrossConnect
+/home/demo/Project/TomCat/apache-tomcat-9.0.10/lib/servlet-api.jar

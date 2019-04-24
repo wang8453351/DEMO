@@ -1,0 +1,20 @@
+# Example for a model file
+
+GLOBAL
+  testhead = TH_8CC                          # TH_1CC | TH_2CC | TH_4CC | TH_8CC
+  dut_interface = SOC_8GROUP                 # SOC_4GROUP | SOC_8GROUP 
+  hpib_interface = vxi11/e5810/192.168.0.100/gpib0
+  timing_bundle = w256-d8-r8
+#  s&s_value_package = ON
+  utility_lines = 64, type=static, pogo_size=16
+
+CARD_CONFIGURATION
+  slot = 101, HW = PS1600,  pogoblocks = 101-108
+  slot = 102, HW = PS1600B, pogoblocks = 109-116
+  slot = 103, HW = WSMX,    pogoblocks = HS:(231 431) HS:(228 428)
+  slot = 104, HW = WSRF,    pogoblocks = 901 902					
+  slot = 105, HW = PS9G,    pogoblocks = 301 302 305 306
+
+  slot = 111, HW = DPS128,  pogoblocks = HC:(225 657 425 857), type=REDIRECT, subtype=E8023PD, config= 225:(225 657) 425:(425 857)
+  slot = 112, HW = DPS128,  pogoblocks = HC:(229 661 429 861), type=REDIRECT, subtype=E8023PD, config= 229:(229 661) 429:(429 861)
+

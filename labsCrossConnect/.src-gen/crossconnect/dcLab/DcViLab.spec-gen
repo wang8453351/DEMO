@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpecSheet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="SpecSheet.xsd" origin="//@spec">
+ <Import value="crossconnect/common/SignalGroups.spec-gen" origin="//@importSection/@importDeclarations.0" />
+ <Instrument id="D00,D02,D03" origin="//@spec/@setups.0">
+ </Instrument>
+ <Instrument id="R00,R02,R03" origin="//@spec/@setups.1">
+ </Instrument>
+ <Instrument id="D01,R01" origin="//@spec/@setups.2">
+     <Set id="wavetable" label="default" origin="//@spec/@setups.2/@wavetables.0">
+         <Group id="x1" origin="//@spec/@setups.2/@wavetables.0">
+             <Assignment id="_0" value="d1:0" origin="//@spec/@setups.2/@wavetables.0/@content/@stateCharacters.0"/>
+             <Assignment id="_1" value="d1:1" origin="//@spec/@setups.2/@wavetables.0/@content/@stateCharacters.1"/>
+             <Assignment id="_Z" value="d1:Z" origin="//@spec/@setups.2/@wavetables.0/@content/@stateCharacters.2"/>
+             <Assignment id="_L" value="d1:Z r1:L" origin="//@spec/@setups.2/@wavetables.0/@content/@stateCharacters.3"/>
+             <Assignment id="_H" value="d1:Z r1:H" origin="//@spec/@setups.2/@wavetables.0/@content/@stateCharacters.4"/>
+             <Assignment id="_X" value="d1:Z r1:X" origin="//@spec/@setups.2/@wavetables.0/@content/@stateCharacters.5"/>
+         </Group>
+     </Set>
+ </Instrument>
+</SpecSheet>

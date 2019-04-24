@@ -1,0 +1,16 @@
+sequence SpecFileLab {
+    parallel parGrp1 {
+        sequential seq1_1 {
+            //
+            // Lab : Change pattern to XModeLab_00_03x2.pat
+            //
+            patternCall crossconnect.setupFilesLab.patterns.XModeLab_00_03x2;
+        }
+        sequential seq2_1 {
+            patternCall crossconnect.setupFilesLab.patterns.OpSeqLab_04_07x1;
+        }
+        sequential seq3_1 {
+            patternCall crossconnect.setupFilesLab.patterns.OpSeqLab_08_15x1;
+        }
+    }
+}
